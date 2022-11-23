@@ -3,12 +3,13 @@
 const express = require("express");
 const app = express();
 
+const morgan = require("morgan");
+const itemsRoutes = require("./routes/items")
 const { NotFoundError } = require("./expressError");
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
+app.use(morgan('dev'));
+app.use("/items", itemsRoutes);
 
 /** handle site-wide 404s */
 app.use(function (req, res) {
