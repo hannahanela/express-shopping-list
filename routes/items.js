@@ -54,7 +54,40 @@ router.get('/:name', function(req, res, next) {
         }
     }
 
+    // TODO: error for item not found
+
     return res.json(foundItem);
+});
+
+/** PATCH /items/:name: update an item
+ * 
+ *  takes item:
+ *      {name, price}
+ * 
+ *  returns JSON:
+ *      {updated: {name, price}}
+ * 
+ */
+router.patch('/:name', function(req, res, next) {
+    let itemName = req.params.name;
+    let updatedItem;
+    let index;
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].name === itemName) {
+            updatedItem = items[i];
+            index = i;
+        }
+    }
+
+    updatedItem.name = req.body.name;
+    updatedItem.price = req.body.price;
+
+    items[index] = updatedItem;
+
+    // TODO: error messages
+
+    return res.json({updated: updatedItem});
 });
 
 module.exports = router;
