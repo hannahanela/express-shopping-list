@@ -3,6 +3,7 @@
 const express = require("express");
 
 const { items } = require("../fakeDb");
+const { NotFoundError } = require("../expressError");
 
 const router = new express.Router();
 
@@ -45,18 +46,15 @@ router.post('/', function(req, res, next) {
  * 
  */
 router.get('/:name', function(req, res, next) {
-    let itemName = req.params.name;
-    let foundItem;
-    
-    for (let item of items) {
-        if (item.name === itemName) {
-            foundItem = item;
-        }
+    let item = items.find(i =>
+        i.name === req.params.name
+        );
+
+    if (!item) {
+        throw new NotFoundError("No such item");
     }
 
-    // TODO: error for item not found
-
-    return res.json(foundItem);
+    return res.json(item);
 });
 
 /** PATCH /items/:name: update an item
@@ -88,6 +86,23 @@ router.patch('/:name', function(req, res, next) {
     // TODO: error messages
 
     return res.json({updated: updatedItem});
+});
+
+/** DELETE /items/:name: delete an item
+ * 
+ *  returns JSON:
+ *      {message: "Deleted"}
+ * 
+ */
+router.delete('/:name', function(req, res, next) {
+    let itemName = req.params.name;
+
+    for (let item of items) {
+        if (item.name === itemName) {
+            ;
+        }
+    }
+
 });
 
 module.exports = router;
