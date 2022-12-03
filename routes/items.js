@@ -16,7 +16,7 @@ const router = new express.Router();
  * 
  */
 router.get('/', function(req, res, next) {
-    return res.json(items);
+    return res.json({items: items});
 });
 
 /** POST /items: create a new item
@@ -36,7 +36,7 @@ router.post('/', function(req, res, next) {
 
     items.push(newItem);
 
-    return res.json({added: newItem});
+    return res.status(201).json({added: newItem});
 });
 
 /** GET /items/:name: get a single item
@@ -46,6 +46,7 @@ router.post('/', function(req, res, next) {
  * 
  */
 router.get('/:name', function(req, res, next) {
+    debugger;
     let item = items.find(i =>
         i.name === req.params.name
         );
