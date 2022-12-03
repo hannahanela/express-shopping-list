@@ -84,7 +84,7 @@ router.patch('/:name', function(req, res, next) {
     item.price = req.body.price;
 
     items[index] = item;
-    
+
     return res.json({updated: item});
 });
 
@@ -95,14 +95,22 @@ router.patch('/:name', function(req, res, next) {
  * 
  */
 router.delete('/:name', function(req, res, next) {
-    let itemName = req.params.name;
+    let index;
 
-    for (let item of items) {
-        if (item.name === itemName) {
-            ;
+    let item = items.find(function(i, idx){
+        if (i.name === req.params.name) {
+            index = idx;
+            return i;
         }
+    })
+
+    if (!item) {
+        throw new NotFoundError("No such item");
     }
 
+    items.splice(index, 1);
+
+    return res.json({message: "Deleted"});
 });
 
 module.exports = router;
