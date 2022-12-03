@@ -67,25 +67,25 @@ router.get('/:name', function(req, res, next) {
  * 
  */
 router.patch('/:name', function(req, res, next) {
-    let itemName = req.params.name;
-    let updatedItem;
     let index;
 
-    for (let i = 0; i < items.length; i++) {
-        if (items[i].name === itemName) {
-            updatedItem = items[i];
-            index = i;
+    let item = items.find(function(i, idx){
+        if (i.name === req.params.name) {
+            index = idx;
+            return i;
         }
+    })
+
+    if (!item) {
+        throw new NotFoundError("No such item");
     }
 
-    updatedItem.name = req.body.name;
-    updatedItem.price = req.body.price;
+    item.name = req.body.name;
+    item.price = req.body.price;
 
-    items[index] = updatedItem;
-
-    // TODO: error messages
-
-    return res.json({updated: updatedItem});
+    items[index] = item;
+    
+    return res.json({updated: item});
 });
 
 /** DELETE /items/:name: delete an item
