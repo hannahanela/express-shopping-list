@@ -63,7 +63,7 @@ describe("POST /items", function() {
 
   it("Responds with 400 if item is a duplicate", async function() {
     const resp = await request(app)
-      .post('/items',)
+      .post('/items')
       .send({
         name: "chips",
         price: 1.25
@@ -78,7 +78,21 @@ describe("POST /items", function() {
     });
   });
 
-  // TODO: test missing required data
+  it("Responds with 400 if item is missing data", async function() {
+    const resp = await request(app)
+      .post('/items')
+      .send({
+        name: "raisins"
+      });
+
+    expect(resp.statusCode).toEqual(400);
+    expect(resp.body).toEqual({
+      error: {
+        message: "Missing required data",
+        status: 400
+      }
+    });
+  });
 });
 
 /** GET /items/:name
