@@ -3,7 +3,7 @@
 const express = require("express");
 
 const { items } = require("../fakeDb");
-const { NotFoundError } = require("../expressError");
+const { NotFoundError, BadRequestError } = require("../expressError");
 
 const router = new express.Router();
 
@@ -29,6 +29,14 @@ router.get('/', function(req, res, next) {
  * 
  */
 router.post('/', function(req, res, next) {
+    let item = items.find(i =>
+        i.name === req.body.name
+        );
+
+    if (item) {
+        throw new BadRequestError("Item already exists")
+    }
+    
     let newItem = {};
 
     newItem.name = req.body.name;
@@ -46,7 +54,6 @@ router.post('/', function(req, res, next) {
  * 
  */
 router.get('/:name', function(req, res, next) {
-    debugger;
     let item = items.find(i =>
         i.name === req.params.name
         );
