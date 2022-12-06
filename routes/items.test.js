@@ -80,10 +80,6 @@ describe("POST /items", function() {
 
 /** GET /items/:name
  * 
- *  takes:
- * 
- *  
- * 
  *  returns JSON:
  *      {name, price}
  * 
@@ -110,3 +106,45 @@ describe("POST /items", function() {
     })
   })
  });
+
+ /** PATCH /items/:name
+ * 
+ *  returns JSON:
+ * 
+ *  {updated: {name, price}}
+ * 
+ */
+  describe("PATCH /items/:name", function() {
+    it("Updates a single item", async function() {
+      const resp = await request(app)
+        .patch(`/items/${testItem.name}`)
+        .send({
+          name: "pickles",
+          price: 1.25
+        });
+
+      expect(resp.body).toEqual({
+        updated: {
+          name: "pickles",
+          price: 1.25
+        }
+      })
+    });
+
+    it("Responds with 404 if name invalid", async function() {
+      const resp = await request(app)
+        .patch('/items/candy')
+        .send({
+          name: "testFail",
+          price: 0.00
+        });
+
+      expect(resp.statusCode).toEqual(404);
+      expect(resp.body).toEqual({
+        error: {
+          message: "No such item",
+          status: 404
+        }
+      })
+    });
+  });
