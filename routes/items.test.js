@@ -24,7 +24,7 @@ afterEach(function() {
  * 
  */
 describe("GET /items", function() {
-  it("Gets a list of cats", async function() {
+  it("Gets a list of items", async function() {
     const resp = await request(app).get('/items');
 
     expect(resp.statusCode).toEqual(200);
@@ -34,7 +34,9 @@ describe("GET /items", function() {
 
 /** POST /items
  * 
- *      {name, price}
+ *  sends:
+ * 
+ *  {name, price}
  * 
  *  returns JSON:
  *      
@@ -58,4 +60,53 @@ describe("POST /items", function() {
       }
     });
   });
+
+  it("Responds with 400 if item is a duplicate", async function() {
+    const resp = await request(app)
+      .post('/items',)
+      .send({
+        name: "chips",
+        price: 1.25
+      });
+
+    expect(resp.statusCode).toEqual(400);
+    expect(resp.body).toEqual({
+      message: "Bad Request"
+    });
+  });
+
+  // TODO: test missing required data
 });
+
+/** GET /items/:name
+ * 
+ *  takes:
+ * 
+ *  
+ * 
+ *  returns JSON:
+ *      {name, price}
+ * 
+ */
+ describe("GET /items/:name", function() {
+  it("Gets a single item", async function() {
+    const resp = await request(app).get(`/items/${testItem.name}`);
+
+    expect(resp.body).toEqual({
+      name: "chips",
+      price: 1.25
+    })
+  });
+
+  it("Respondes with 404 if name invalid", async function() {
+    const resp = await request(app).get('/items/candy');
+
+    expect(resp.statusCode).toEqual(404);
+    expect(resp.body).toEqual({
+      error: {
+        message: "No such item",
+        status: 404
+      }
+    })
+  })
+ });
