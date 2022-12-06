@@ -91,7 +91,7 @@ describe("POST /items", function() {
     expect(resp.body).toEqual({
       name: "chips",
       price: 1.25
-    })
+    });
   });
 
   it("Respondes with 404 if name invalid", async function() {
@@ -103,11 +103,15 @@ describe("POST /items", function() {
         message: "No such item",
         status: 404
       }
-    })
-  })
+    });
+  });
  });
 
  /** PATCH /items/:name
+ * 
+ *  sends:
+ * 
+ *  {name, price} 
  * 
  *  returns JSON:
  * 
@@ -128,7 +132,7 @@ describe("POST /items", function() {
           name: "pickles",
           price: 1.25
         }
-      })
+      });
     });
 
     it("Responds with 404 if name invalid", async function() {
@@ -145,6 +149,35 @@ describe("POST /items", function() {
           message: "No such item",
           status: 404
         }
-      })
+      });
     });
   });
+
+/** DELETE /items/:name
+ * 
+ *  returns JSON:
+ *  
+ *  {message: "Deleted"}
+ *    
+ */
+describe("DELETE /items/:name", function() {
+  it("Deletes a single item", async function() {
+    const resp = await request(app).delete(`/items/${testItem.name}`);
+
+    expect(resp.body).toEqual({
+      message: "Deleted"
+    });
+  });
+
+  it("Responds with 404 if name invalid", async function() {
+    const resp = await request(app).delete('/items/candy');
+
+    expect(resp.statusCode).toEqual(404);
+    expect(resp.body).toEqual({
+      error: {
+        message: "No such item",
+        status: 404
+      }
+    });
+  });
+});
