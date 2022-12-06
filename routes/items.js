@@ -33,10 +33,14 @@ router.post('/', function(req, res, next) {
         i.name === req.body.name
         );
 
+    console.log("item=", item);
+
     if (item) {
-        throw new BadRequestError("Item already exists")
+        throw new BadRequestError("Item already exists");
+    } else if (!req.body.name || !req.body.price) {
+        throw new BadRequestError("Missing required data");
     }
-    
+
     let newItem = {};
 
     newItem.name = req.body.name;
