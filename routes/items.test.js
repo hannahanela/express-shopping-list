@@ -71,7 +71,10 @@ describe("POST /items", function() {
 
     expect(resp.statusCode).toEqual(400);
     expect(resp.body).toEqual({
-      message: "Bad Request"
+      error: {
+        message: "Item already exists",
+        status: 400
+      }
     });
   });
 
